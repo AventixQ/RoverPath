@@ -1,5 +1,8 @@
 package com.example.roverpath
 
+import android.content.res.Configuration
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,17 +11,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.platform.LocalConfiguration
 
 //Kontent wyświetlany dla pozycji poziomej, na pozostałej szerokości ekranu
 @Composable
@@ -32,10 +38,11 @@ fun DetailsContent(trail: Trail) {
         Column (
             Modifier
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
         ){
             Text(
                 text = trail.name,
-                fontSize = 60.sp,
+                fontSize = 40.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(16.dp)
@@ -44,14 +51,14 @@ fun DetailsContent(trail: Trail) {
                 modifier = Modifier.padding(16.dp),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(20.dp)) {
                     Text(text = trail.place, fontSize = 40.sp)
-                    Text(text = "Długość: ${trail.length}km", fontSize = 30.sp)
-                    Text(text = "Poziom trudności: ${trail.difficultyLevel}", fontSize = 30.sp)
+                    Text(text = "Długość: ${trail.length}km", fontSize = 20.sp)
+                    Text(text = "Poziom trudności: ${trail.difficultyLevel}", fontSize = 20.sp)
                     val dependTime = trail.difficultyLevel.speed * trail.time
-                    Text(text = "Czas przejścia: ${dependTime}h", fontSize = 30.sp)
+                    Text(text = "Czas przejścia: ${dependTime}h", fontSize = 20.sp)
                     trail.stages.forEach { stage ->
-                        Text(text = "${stage.name}: ${stage.where}", fontSize = 30.sp)
+                        Text(text = "${stage.name}: ${stage.where}", fontSize = 20.sp)
                     }
                 }
             }
@@ -60,8 +67,21 @@ fun DetailsContent(trail: Trail) {
                 modifier = Modifier.padding(16.dp),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Stoper()
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "Zrób zdjęcie ze szlaku!", fontSize = 35.sp)
+                    CameraButton()
+                    Column(
+                        Modifier
+                            .padding(80.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Stoper()
+                    }
                 }
             }
         }
@@ -69,27 +89,35 @@ fun DetailsContent(trail: Trail) {
 }
 
 
+
 // Ekran ze szczegółami każdej ścieżki dla pozycji pionowej
 @Composable
 fun DetailsScreen(trailId: String?, navController: NavController) {
     val trail = getTrails().find { it.name == trailId } // Probrana ścieżka zależnie od jej nazwy
+    val configuration = LocalConfiguration.current
+    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        navController.navigate("main")}
     trail?.let {// Wypisywanie wszystkich szczegółów ścieżki
         Box(
             Modifier
                 .fillMaxSize(),
+
             contentAlignment = Alignment.TopCenter
         ) {
             Column (
                 Modifier
                     .fillMaxWidth()
+                    .padding(top = 65.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Text(
-                    text = trail.name,
-                    fontSize = 60.sp,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(16.dp)
-                )
+                Image(painter = trail.image,
+                    contentDescription = "Opis obrazka",
+                    Modifier
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth)
+
                 Surface(
                     modifier = Modifier.padding(16.dp),
                     shape = RoundedCornerShape(8.dp)
@@ -110,19 +138,24 @@ fun DetailsScreen(trailId: String?, navController: NavController) {
                     modifier = Modifier.padding(16.dp),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Stoper() //wyświetlanie stopera
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Text(text = "Zrób zdjęcie ze szlaku!", fontSize = 25.sp)
+                        CameraButton()
+                        Column(
+                            Modifier
+                                .padding(20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ){
+                            Stoper()
+                        }
                     }
                   }
                 }
             }
-        Box(
-            Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            Button(onClick = { navController.navigate("main") }) { // przycisk poworotu do strony głównej
-                Text("Wróć")}
-        }
     }
 }

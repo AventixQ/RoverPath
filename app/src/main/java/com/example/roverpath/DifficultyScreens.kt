@@ -26,8 +26,8 @@ import androidx.compose.ui.Alignment
 
 // Główny ekran z wypisanymi wszystkimi ścieżkami
 @Composable
-fun MainScreen(navController: NavController) {
-    val trails = getTrails() // Pobieramy ścieżki
+fun DifficultyScreen(navController: NavController, difficultyLevel: DifficultyLevel) {
+    val trails = getTrails().filter { it.difficultyLevel == difficultyLevel }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -50,18 +50,18 @@ fun MainScreen(navController: NavController) {
 }
 
 @Composable
-fun MainTabletScreen(navController: NavController) {
-    val trails = getTrails() // Pobieramy ścieżki
+fun DifficultyTabletScreen(navController: NavController, difficultyLevel: DifficultyLevel) {
+    val trails = getTrails().filter { it.difficultyLevel == difficultyLevel }
     var selectedTrail by remember { mutableStateOf<Trail?>(null) } // Stan dla wybranego szlaku
     Row(Modifier.fillMaxSize()) { // Dodajemy Row, aby podzielić ekran na dwie części
         LazyVerticalGrid(
             columns = GridCells.Fixed(1),
             contentPadding = PaddingValues(8.dp),
             modifier = Modifier
-                //.padding(20.dp)
-                //.padding(top = 20.dp)
+                .padding(20.dp)
+                .padding(top = 60.dp)
                 .fillMaxWidth(0.35f),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(trails) { trail ->
                 Card(
@@ -69,7 +69,7 @@ fun MainTabletScreen(navController: NavController) {
                         .clickable {
                             selectedTrail = trail
                         } // Przycisk, po wciśnięciu przjeście do DetailsScreen
-                        .padding(5.dp)
+                        .padding(8.dp)
                 ) {
                     Column (
                         modifier = Modifier
@@ -87,7 +87,7 @@ fun MainTabletScreen(navController: NavController) {
             Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp)
-                .padding(top = 20.dp)
+                .padding(top = 60.dp)
         ) { // Druga połowa ekranu dla szczegółów szlaku
             selectedTrail?.let { trail ->
                 DetailsContent(trail) // Wyświetlamy szczegóły wybranego szlaku

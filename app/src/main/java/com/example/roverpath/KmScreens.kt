@@ -24,10 +24,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.ui.Alignment
 
-// Główny ekran z wypisanymi wszystkimi ścieżkami
 @Composable
-fun MainScreen(navController: NavController) {
-    val trails = getTrails() // Pobieramy ścieżki
+fun KmLessScreen(navController: NavController) {
+    val trails = getTrails().filter { it.length <= 10}
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -50,18 +49,18 @@ fun MainScreen(navController: NavController) {
 }
 
 @Composable
-fun MainTabletScreen(navController: NavController) {
-    val trails = getTrails() // Pobieramy ścieżki
+fun KmLessTabletScreen(navController: NavController) {
+    val trails = getTrails().filter { it.length <= 10}
     var selectedTrail by remember { mutableStateOf<Trail?>(null) } // Stan dla wybranego szlaku
     Row(Modifier.fillMaxSize()) { // Dodajemy Row, aby podzielić ekran na dwie części
         LazyVerticalGrid(
             columns = GridCells.Fixed(1),
             contentPadding = PaddingValues(8.dp),
             modifier = Modifier
-                //.padding(20.dp)
-                //.padding(top = 20.dp)
+                .padding(20.dp)
+                .padding(top = 60.dp)
                 .fillMaxWidth(0.35f),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(trails) { trail ->
                 Card(
@@ -69,7 +68,7 @@ fun MainTabletScreen(navController: NavController) {
                         .clickable {
                             selectedTrail = trail
                         } // Przycisk, po wciśnięciu przjeście do DetailsScreen
-                        .padding(5.dp)
+                        .padding(8.dp)
                 ) {
                     Column (
                         modifier = Modifier
@@ -87,7 +86,78 @@ fun MainTabletScreen(navController: NavController) {
             Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp)
-                .padding(top = 20.dp)
+                .padding(top = 60.dp)
+        ) { // Druga połowa ekranu dla szczegółów szlaku
+            selectedTrail?.let { trail ->
+                DetailsContent(trail) // Wyświetlamy szczegóły wybranego szlaku
+            }
+        }
+    }
+}
+
+@Composable
+fun KmMoreScreen(navController: NavController) {
+    val trails = getTrails().filter { it.length >= 10}
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(8.dp),
+        modifier = Modifier.padding(top = 60.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(trails) { trail ->
+            Card(
+                modifier = Modifier
+                    .clickable { navController.navigate("details/${trail.name}") } // Przycisk, po wciśnięciu przjeście do DetailsScreen
+                    .padding(8.dp)
+            ) {
+                Column {
+                    Image(painter = trail.image, contentDescription = "Opis obrazka")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun KmMoreTabletScreen(navController: NavController) {
+    val trails = getTrails().filter { it.length >= 10}
+    var selectedTrail by remember { mutableStateOf<Trail?>(null) } // Stan dla wybranego szlaku
+    Row(Modifier.fillMaxSize()) { // Dodajemy Row, aby podzielić ekran na dwie części
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(1),
+            contentPadding = PaddingValues(8.dp),
+            modifier = Modifier
+                .padding(20.dp)
+                .padding(top = 60.dp)
+                .fillMaxWidth(0.35f),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(trails) { trail ->
+                Card(
+                    modifier = Modifier
+                        .clickable {
+                            selectedTrail = trail
+                        } // Przycisk, po wciśnięciu przjeście do DetailsScreen
+                        .padding(8.dp)
+                ) {
+                    Column (
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Image(painter = trail.image, contentDescription = "Opis obrazka")
+                    }
+                }
+            }
+        }
+
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp)
+                .padding(top = 60.dp)
         ) { // Druga połowa ekranu dla szczegółów szlaku
             selectedTrail?.let { trail ->
                 DetailsContent(trail) // Wyświetlamy szczegóły wybranego szlaku

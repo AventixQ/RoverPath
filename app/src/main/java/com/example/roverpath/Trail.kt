@@ -1,7 +1,9 @@
 package com.example.roverpath
 
-import android.health.connect.datatypes.units.Length
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 
 // TODO: Więcej ścieżek
 
@@ -12,7 +14,8 @@ data class Trail(
     val stages: List<Stage>,
     val difficultyLevel: DifficultyLevel,
     val time: Double,
-    val color: Color
+    val color: Color,
+    val image: Painter
 )
 
 data class Stage(
@@ -23,9 +26,10 @@ data class Stage(
 enum class DifficultyLevel(val speed: Double) {
     EASY(1.3),
     NORMAL(1.0),
-    HARD(0.7)
+    HARD(0.7);
 }
 
+@Composable
 fun getTrails(): List<Trail> {
     return listOf(
         Trail(
@@ -39,7 +43,8 @@ fun getTrails(): List<Trail> {
             ),
             difficultyLevel = DifficultyLevel.NORMAL,
             time = 6.5,
-            color = Color.Red
+            color = Color.Red,
+            image = painterResource(R.drawable.wetlina)
         ),
         Trail(
             name = "Wołosate - Tarnica",
@@ -51,7 +56,8 @@ fun getTrails(): List<Trail> {
             ),
             difficultyLevel = DifficultyLevel.EASY,
             time = 2.0,
-            color = Color.Blue
+            color = Color.Blue,
+            image = painterResource(R.drawable.tarnica)
         ),
         Trail(
             name = "Połonina Caryńska",
@@ -63,7 +69,21 @@ fun getTrails(): List<Trail> {
             ),
             difficultyLevel = DifficultyLevel.EASY,
             time = 3.5,
-            color = Color.Red
-        )
+            color = Color.Red,
+            image = painterResource(R.drawable.carynska)
+        ),
+        Trail(
+            name = "Bukowe Berdo",
+            place = "Bieszczady",
+            length = 7.00,
+            stages = listOf(
+                Stage("Etap 1", "Muczne - Berdo Borsukowe (1011)"),
+                Stage("Etap 2", "Berdo Borsukowe (1011) - Bukowe Berdo (1311)"),
+            ),
+            difficultyLevel = DifficultyLevel.HARD,
+            time = 4.5,
+            color = Color.Blue,
+            image = painterResource(R.drawable.berdo)
+    )
     )
 }
