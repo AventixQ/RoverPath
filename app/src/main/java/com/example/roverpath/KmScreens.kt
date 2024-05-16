@@ -57,10 +57,10 @@ fun KmLessTabletScreen(navController: NavController) {
             columns = GridCells.Fixed(1),
             contentPadding = PaddingValues(8.dp),
             modifier = Modifier
-                .padding(20.dp)
-                .padding(top = 60.dp)
+                //.padding(20.dp)
+                //.padding(top = 20.dp)
                 .fillMaxWidth(0.35f),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(trails) { trail ->
                 Card(
@@ -68,7 +68,7 @@ fun KmLessTabletScreen(navController: NavController) {
                         .clickable {
                             selectedTrail = trail
                         } // Przycisk, po wciśnięciu przjeście do DetailsScreen
-                        .padding(8.dp)
+                        .padding(5.dp)
                 ) {
                     Column (
                         modifier = Modifier
@@ -86,10 +86,10 @@ fun KmLessTabletScreen(navController: NavController) {
             Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp)
-                .padding(top = 60.dp)
+                .padding(top = 20.dp)
         ) { // Druga połowa ekranu dla szczegółów szlaku
             selectedTrail?.let { trail ->
-                DetailsContent(trail) // Wyświetlamy szczegóły wybranego szlaku
+                DetailsContent(trail, navController) // Wyświetlamy szczegóły wybranego szlaku
             }
         }
     }
@@ -160,7 +160,7 @@ fun KmMoreTabletScreen(navController: NavController) {
                 .padding(top = 60.dp)
         ) { // Druga połowa ekranu dla szczegółów szlaku
             selectedTrail?.let { trail ->
-                DetailsContent(trail) // Wyświetlamy szczegóły wybranego szlaku
+                DetailsContent(trail, navController) // Wyświetlamy szczegóły wybranego szlaku
             }
         }
     }

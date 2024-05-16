@@ -27,7 +27,7 @@ import androidx.compose.ui.Alignment
 // Główny ekran z wypisanymi wszystkimi ścieżkami
 @Composable
 fun MainScreen(navController: NavController) {
-    val trails = getTrails() // Pobieramy ścieżki
+    val trails = getTrails()
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -90,7 +90,7 @@ fun MainTabletScreen(navController: NavController) {
                 .padding(top = 20.dp)
         ) { // Druga połowa ekranu dla szczegółów szlaku
             selectedTrail?.let { trail ->
-                DetailsContent(trail) // Wyświetlamy szczegóły wybranego szlaku
+                DetailsContent(trail, navController) // Wyświetlamy szczegóły wybranego szlaku
             }
         }
     }

@@ -28,7 +28,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 
 //Kontent wyświetlany dla pozycji poziomej, na pozostałej szerokości ekranu
 @Composable
-fun DetailsContent(trail: Trail) {
+fun DetailsContent(trail: Trail, navController: NavController) {
+    val configuration = LocalConfiguration.current
+    if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+        navController.navigate("details/{trailId}")}
     // Wypisywanie wszystkich szczegółów ścieżki
     Box(
         Modifier
@@ -94,9 +97,9 @@ fun DetailsContent(trail: Trail) {
 @Composable
 fun DetailsScreen(trailId: String?, navController: NavController) {
     val trail = getTrails().find { it.name == trailId } // Probrana ścieżka zależnie od jej nazwy
-    val configuration = LocalConfiguration.current
-    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        navController.navigate("main")}
+    //val configuration = LocalConfiguration.current
+    //if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+    //    navController.navigate("details/{trailId}")}
     trail?.let {// Wypisywanie wszystkich szczegółów ścieżki
         Box(
             Modifier
